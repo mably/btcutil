@@ -7,8 +7,8 @@ package hdkeychain_test
 import (
 	"fmt"
 
-	"github.com/conformal/btcnet"
-	"github.com/conformal/btcutil/hdkeychain"
+	"github.com/mably/btcnet"
+	"github.com/mably/btcutil/hdkeychain"
 )
 
 // This example demonstrates how to generate a cryptographically random seed
