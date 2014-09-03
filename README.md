@@ -18,12 +18,12 @@ provided.
 
 ## Documentation
 
-[![GoDoc](https://godoc.org/github.com/conformal/btcutil?status.png)]
-(http://godoc.org/github.com/conformal/btcutil)
+[![GoDoc](https://godoc.org/github.com/mably/btcutil?status.png)]
+(http://godoc.org/github.com/mably/btcutil)
 
 Full `go doc` style documentation for the project can be viewed online without
 installing this package by using the GoDoc site here:
-http://godoc.org/github.com/conformal/btcutil
+http://godoc.org/github.com/mably/btcutil
 
 You can also view the documentation locally once the package is installed with
 the `godoc` tool by running `godoc -http=":6060"` and pointing your browser to
@@ -32,7 +32,7 @@ http://localhost:6060/pkg/github.com/conformal/btcutil
 ## Installation
 
 ```bash
-$ go get github.com/conformal/btcutil
+$ go get github.com/mably/btcutil
 ```
 
 ## GPG Verification Key
