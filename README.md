@@ -3,6 +3,7 @@ btcutil
 
 [![Build Status](https://travis-ci.org/conformal/btcutil.png?branch=master)]
 (https://travis-ci.org/conformal/btcutil)
+[![tip for next commit](http://peer4commit.com/projects/130.svg)](http://peer4commit.com/projects/130)
 
 Package btcutil provides bitcoin-specific convenience functions and types.
 A comprehensive suite of tests is provided to ensure proper functionality.  See
