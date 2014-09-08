@@ -2,26 +2,113 @@ package btcutil
 
 import (
 	"bytes"
+	"encoding/binary"
 	"github.com/mably/btcwire"
 	"io"
 	"math/big"
 )
 
 type Meta struct {
-	generatedStakeModifier bool
-	stakeModifier          uint64
-	stakeModifierChecksum  uint32 // checksum of index; in-memeory only (main.h)
-	hashProofOfStake       *btcwire.ShaHash
-	stakeEntropyBit        uint32
-	flags                  uint32
-	chainTrust             *big.Int
+	GeneratedStakeModifier bool
+	StakeModifier          uint64
+	StakeModifierChecksum  uint32 // checksum of index; in-memeory only (main.h)
+	HashProofOfStake       btcwire.ShaHash
+	StakeEntropyBit        uint32
+	Flags                  uint32
+	ChainTrust             big.Int
 }
 
-func (msg *Meta) Serialize(w io.Writer) error {
+func (m *Meta) Serialize(w io.Writer) error {
+	var scratch [8]byte
+	b := scratch[0:1]
+	if m.GeneratedStakeModifier {
+		b[0] = 1
+	} else {
+		b[0] = 0
+	}
+	_, e := w.Write(b)
+	if e != nil {
+		return e
+	}
+	e = binary.Write(w, binary.LittleEndian, &m.StakeModifier)
+	if e != nil {
+		return e
+	}
+	binary.Write(w, binary.LittleEndian, &m.StakeModifierChecksum)
+	if e != nil {
+		return e
+	}
+	binary.Write(w, binary.LittleEndian, &m.StakeEntropyBit)
+	if e != nil {
+		return e
+	}
+
+	binary.Write(w, binary.LittleEndian, &m.Flags)
+	if e != nil {
+		return e
+	}
+	binary.Write(w, binary.LittleEndian, &m.HashProofOfStake)
+	if e != nil {
+		return e
+	}
+	bytes := m.ChainTrust.Bytes()
+	var blen byte
+	blen = byte(len(bytes))
+	binary.Write(w, binary.LittleEndian, &blen)
+	if e != nil {
+		return e
+	}
+	binary.Write(w, binary.LittleEndian, &bytes)
+	if e != nil {
+		return e
+	}
 	return nil
 }
 
-func (msg *Meta) Deserialize(r io.Reader) error {
+func (m *Meta) Deserialize(r io.Reader) error {
+	var scratch [8]byte
+	b := scratch[0:1]
+	_, e := r.Read(b)
+	if e != nil {
+		return e
+	}
+	if b[0] == 0 {
+		m.GeneratedStakeModifier = false
+	} else {
+		m.GeneratedStakeModifier = true
+	}
+	e = binary.Read(r, binary.LittleEndian, &m.StakeModifier)
+	if e != nil {
+		return e
+	}
+	e = binary.Read(r, binary.LittleEndian, &m.StakeModifierChecksum)
+	if e != nil {
+		return e
+	}
+	e = binary.Read(r, binary.LittleEndian, &m.StakeEntropyBit)
+	if e != nil {
+		return e
+	}
+	e = binary.Read(r, binary.LittleEndian, &m.Flags)
+	if e != nil {
+		return e
+	}
+	e = binary.Read(r, binary.LittleEndian, &m.HashProofOfStake)
+	if e != nil {
+		return e
+	}
+
+	var blen byte
+	e = binary.Read(r, binary.LittleEndian, &blen)
+	if e != nil {
+		return e
+	}
+	var arr = make([]byte, blen)
+	e = binary.Read(r, binary.LittleEndian, &arr)
+	if e != nil {
+		return e
+	}
+	m.ChainTrust.SetBytes(arr)
 	return nil
 }
 
