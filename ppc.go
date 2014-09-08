@@ -126,7 +126,7 @@ func NewBlockFromBytesWithMeta(serializedBlock []byte) (*Block, error) {
 	if err != nil {
 		return nil, err
 	}
-	b.serializedBlock = serializedBlock
+	//b.serializedBlock = serializedBlock
 	return b, nil
 }
 
