@@ -9,28 +9,15 @@ import (
 )
 
 type Meta struct {
-	GeneratedStakeModifier bool
-	StakeModifier          uint64
-	StakeModifierChecksum  uint32 // checksum of index; in-memeory only (main.h)
-	HashProofOfStake       btcwire.ShaHash
-	StakeEntropyBit        uint32
-	Flags                  uint32
-	ChainTrust             big.Int
+	StakeModifier         uint64
+	StakeModifierChecksum uint32 // checksum of index; in-memeory only (main.h)
+	HashProofOfStake      btcwire.ShaHash
+	Flags                 uint32
+	ChainTrust            big.Int
 }
 
 func (m *Meta) Serialize(w io.Writer) error {
-	var scratch [8]byte
-	b := scratch[0:1]
-	if m.GeneratedStakeModifier {
-		b[0] = 1
-	} else {
-		b[0] = 0
-	}
-	_, e := w.Write(b)
-	if e != nil {
-		return e
-	}
-	e = binary.Write(w, binary.LittleEndian, &m.StakeModifier)
+	e := binary.Write(w, binary.LittleEndian, &m.StakeModifier)
 	if e != nil {
 		return e
 	}
@@ -38,11 +25,6 @@ func (m *Meta) Serialize(w io.Writer) error {
 	if e != nil {
 		return e
 	}
-	binary.Write(w, binary.LittleEndian, &m.StakeEntropyBit)
-	if e != nil {
-		return e
-	}
-
 	binary.Write(w, binary.LittleEndian, &m.Flags)
 	if e != nil {
 		return e
@@ -66,26 +48,11 @@ func (m *Meta) Serialize(w io.Writer) error {
 }
 
 func (m *Meta) Deserialize(r io.Reader) error {
-	var scratch [8]byte
-	b := scratch[0:1]
-	_, e := r.Read(b)
-	if e != nil {
-		return e
-	}
-	if b[0] == 0 {
-		m.GeneratedStakeModifier = false
-	} else {
-		m.GeneratedStakeModifier = true
-	}
-	e = binary.Read(r, binary.LittleEndian, &m.StakeModifier)
+	e := binary.Read(r, binary.LittleEndian, &m.StakeModifier)
 	if e != nil {
 		return e
 	}
 	e = binary.Read(r, binary.LittleEndian, &m.StakeModifierChecksum)
-	if e != nil {
-		return e
-	}
-	e = binary.Read(r, binary.LittleEndian, &m.StakeEntropyBit)
 	if e != nil {
 		return e
 	}
@@ -113,7 +80,7 @@ func (m *Meta) Deserialize(r io.Reader) error {
 }
 
 func (b *Block) Meta() *Meta {
-	if b.meta != nil{
+	if b.meta != nil {
 		return b.meta
 	}
 	b.meta = new(Meta)
