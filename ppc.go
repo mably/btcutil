@@ -126,5 +126,6 @@ func (b *Block) BytesWithMeta() ([]byte, error) {
 
 	// Cache the serialized bytes and return them.
 	b.serializedBlock = serializedBlock
+
 	return serializedBlockWithMeta, nil
 }
