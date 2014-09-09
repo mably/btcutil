@@ -113,7 +113,11 @@ func (m *Meta) Deserialize(r io.Reader) error {
 }
 
 func (b *Block) Meta() *Meta {
-	return &b.meta
+	if b.meta != nil{
+		return b.meta
+	}
+	b.meta = new(Meta)
+	return b.meta
 }
 
 func NewBlockFromBytesWithMeta(serializedBlock []byte) (*Block, error) {
@@ -122,7 +126,7 @@ func NewBlockFromBytesWithMeta(serializedBlock []byte) (*Block, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = b.meta.Deserialize(br)
+	err = b.Meta().Deserialize(br)
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +150,7 @@ func (b *Block) BytesWithMeta() ([]byte, error) {
 	serializedBlock := w.Bytes()
 
 	// Serialize Meta.
-	err = b.meta.Serialize(&w)
+	err = b.Meta().Serialize(&w)
 	if err != nil {
 		return nil, err
 	}
