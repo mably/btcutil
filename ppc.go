@@ -3,9 +3,11 @@ package btcutil
 import (
 	"bytes"
 	"encoding/binary"
+	"github.com/conformal/btclog"
 	"github.com/mably/btcwire"
 	"io"
 	"math/big"
+	"time"
 )
 
 type Meta struct {
@@ -128,4 +130,27 @@ func (b *Block) BytesWithMeta() ([]byte, error) {
 	b.serializedBlock = serializedBlock
 
 	return serializedBlockWithMeta, nil
+}
+
+// NewBlock returns a new instance of a bitcoin block given an underlying
+// btcwire.MsgBlock.  See Block.
+func NewBlockWithMetas(msgBlock *btcwire.MsgBlock, meta *Meta) *Block {
+	return &Block{
+		msgBlock:    msgBlock,
+		blockHeight: BlockHeightUnknown,
+		meta: meta,
+	}
+}
+
+func Now() time.Time {
+    return time.Now()
+}
+
+func TimeTrack(log btclog.Logger, start time.Time, name string) {
+    elapsed := time.Since(start)
+    log.Tracef("%s took %s", name, elapsed)
+}
+
+func Slice(args ...interface{}) []interface{} {
+    return args
 }
