@@ -21,16 +21,25 @@ func (b *Block) Meta() *btcwire.Meta {
 
 func NewBlockFromBytesWithMeta(serializedBlock []byte) (*Block, error) {
 	br := bytes.NewReader(serializedBlock)
-	b, err := NewBlockFromReader(br)
+	var meta btcwire.Meta
+	err := meta.Deserialize(br)
 	if err != nil {
 		return nil, err
 	}
-	err = b.Meta().Deserialize(br)
+	var msgBlock btcwire.MsgBlock
+	err = msgBlock.Deserialize(br)
 	if err != nil {
 		return nil, err
 	}
+
+	b := Block{
+		msgBlock:    &msgBlock,
+		blockHeight: BlockHeightUnknown,
+		meta:        &meta,
+	}
+	// TODO(kac-) no cache
 	//b.serializedBlock = serializedBlock
-	return b, nil
+	return &b, nil
 }
 
 func (b *Block) BytesWithMeta() ([]byte, error) {
@@ -38,26 +47,25 @@ func (b *Block) BytesWithMeta() ([]byte, error) {
 	/*if false & len(b.serializedBlock) != 0 {
 		return b.serializedBlock, nil
 	}*/
-
-	// Serialize the MsgBlock.
 	var w bytes.Buffer
-	err := b.msgBlock.Serialize(&w)
+
+	// Serialize Meta.
+	err := b.Meta().Serialize(&w)
 	if err != nil {
 		return nil, err
 	}
 
-	serializedBlock := w.Bytes()
-
-	// Serialize Meta.
-	err = b.Meta().Serialize(&w)
+	// Serialize the MsgBlock.
+	err = b.msgBlock.Serialize(&w)
 	if err != nil {
 		return nil, err
 	}
 
 	serializedBlockWithMeta := w.Bytes()
 
+	// TODO(kac-) no cache
 	// Cache the serialized bytes and return them.
-	b.serializedBlock = serializedBlock
+	//b.serializedBlock = serializedBlock
 
 	return serializedBlockWithMeta, nil
 }
@@ -68,7 +76,7 @@ func NewBlockWithMetas(msgBlock *btcwire.MsgBlock, meta *btcwire.Meta) *Block {
 	return &Block{
 		msgBlock:    msgBlock,
 		blockHeight: BlockHeightUnknown,
-		meta: meta,
+		meta:        meta,
 	}
 }
 
@@ -79,14 +87,14 @@ func (block *Block) IsProofOfStake() bool {
 }
 
 func Now() time.Time {
-    return time.Now()
+	return time.Now()
 }
 
 func TimeTrack(log btclog.Logger, start time.Time, name string) {
-    elapsed := time.Since(start)
-    log.Tracef("%s took %s", name, elapsed)
+	elapsed := time.Since(start)
+	log.Tracef("%s took %s", name, elapsed)
 }
 
 func Slice(args ...interface{}) []interface{} {
-    return args
+	return args
 }
