@@ -121,28 +121,28 @@ func TestAmountUnitConversions(t *testing.T) {
 		{
 			name:      "MPPC",
 			amount:    MaxSatoshi,
-			unit:      AmountMegaPPC,
+			unit:      AmountMegaBTC,
 			converted: 21,
 			s:         "21 MPPC",
 		},
 		{
 			name:      "kPPC",
 			amount:    444333222111, // ppc:
-			unit:      AmountKiloPPC,
+			unit:      AmountKiloBTC,
 			converted: 444.33322211100,
 			s:         "444.333222111 kPPC",
 		},
 		{
 			name:      "PPC",
 			amount:    444333222111, // ppc:
-			unit:      AmountPPC,
+			unit:      AmountBTC,
 			converted: 444333.22211100,
 			s:         "444333.222111 PPC",
 		},
 		{
 			name:      "mPPC",
 			amount:    444333222111, // ppc:
-			unit:      AmountMilliPPC,
+			unit:      AmountMilliBTC,
 			converted: 444333222.11100,
 			s:         "444333222.111 mPPC",
 		},
@@ -150,7 +150,7 @@ func TestAmountUnitConversions(t *testing.T) {
 
 			name:      "μPPC",
 			amount:    444333222111, // ppc:
-			unit:      AmountMicroPPC,
+			unit:      AmountMicroBTC,
 			converted: 444333222111.00,
 			s:         "444333222111 μPPC",
 		},
@@ -178,7 +178,7 @@ func TestAmountUnitConversions(t *testing.T) {
 		}
 
 		// Verify that Amount.String works as advertised.
-		s1 := test.amount.Format(AmountPPC)
+		s1 := test.amount.Format(AmountBTC)
 		s2 := test.amount.String()
 		if s1 != s2 {
 			t.Errorf("%v: String does not match Format(AmountBitcoin): %v != %v", test.name, s1, s2)
