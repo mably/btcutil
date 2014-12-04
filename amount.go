@@ -24,6 +24,7 @@ const (
 	AmountBTC      AmountUnit = 0
 	AmountMilliBTC AmountUnit = -3
 	AmountMicroBTC AmountUnit = -6 // ppc: Sunny
+	AmountSatoshi  AmountUnit = -6 // ppc: Sunny
 )
 
 // String returns the unit as a string.  For recognized units, the SI
