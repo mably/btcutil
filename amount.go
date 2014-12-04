@@ -32,17 +32,17 @@ const (
 func (u AmountUnit) String() string {
 	switch u {
 	case AmountMegaBTC:
-		return "MBTC"
+		return "MPPC"
 	case AmountKiloBTC:
-		return "kBTC"
+		return "kPPC"
 	case AmountBTC:
-		return "BTC"
+		return "PPC"
 	case AmountMilliBTC:
-		return "mBTC"
+		return "mPPC"
 	case AmountMicroBTC:
-		return "μBTC" // ppc: Sunny
+		return "μPPC" // ppc: Sunny
 	default:
-		return "1e" + strconv.FormatInt(int64(u), 10) + " BTC"
+		return "1e" + strconv.FormatInt(int64(u), 10) + " PPC"
 	}
 }
 
